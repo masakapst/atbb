@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Dosing Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        input { width: 80%; padding: 10px; margin: 10px; font-size: 16px; }
+        button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        table { width: 90%; margin: 20px auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+
+    <h2>Drug Dosing Guide</h2>
+    <input type="text" id="searchBox" placeholder="Enter drug name...">
+    <button onclick="searchDrug()">Search</button>
+    <div id="results"></div>
+
+    <script>
+        async function searchDrug() {
+            let query = document.getElementById('searchBox').value.trim();
+            if (!query) return;
+            // You would replace this with actual API fetch or local data filtering logic
+            let data = [
+                {"drug": "Acyclovir", "condition": "General", "crcl_gt_50": "800 mg PO q8h", "crcl_10_50": "800 mg PO q12h", "crcl_lt_10": "800 mg PO q24h", "ihd": "400 mg PO q24h", "crrt": "Adjust based on CRRT"},
+                {"drug": "Amoxicillin", "condition": "General", "crcl_gt_50": "500 mg PO q8h", "crcl_10_50": "500 mg PO q12h", "crcl_lt_10": "500 mg PO q24h", "ihd": "250 mg PO q24h", "crrt": "Adjust based on CRRT"}
+            ];
+
+            let filteredData = data.filter(item => item.drug.toLowerCase().includes(query.toLowerCase()));
+            
+            if (filteredData.length === 0) {
+                document.getElementById('results').innerHTML = "<p>No results found</p>";
+                return;
+            }
+
+            let table = `<table>
+                            <tr><th>Drug</th><th>Condition</th><th>CrCl > 50</th><th>CrCl 10-50</th><th>CrCl < 10</th><th>IHD</th><th>CRRT</th></tr>`;
+            
+            filteredData.forEach(drug => {
+                table += `<tr>
+                            <td>${drug.drug}</td>
+                            <td>${drug.condition}</td>
+                            <td>${drug.crcl_gt_50 || '-'}</td>
+                            <td>${drug.crcl_10_50 || '-'}</td>
+                            <td>${drug.crcl_lt_10 || '-'}</td>
+                            <td>${drug.ihd || '-'}</td>
+                            <td>${drug.crrt || '-'}</td>
+                          </tr>`;
+            });
+
+            table += `</table>`;
+            document.getElementById('results').innerHTML = table;
+        }
+    </script>
+
+</body>
+</html>
